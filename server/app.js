@@ -29,12 +29,6 @@ const spellcheckers = langFiles.reduce((result, lang) => {
   return result;
 }, {});
 
-const proxiedLangs = {
-  "en_US": "American English",
-  "nn_NO": "Norwegian Nynorsk",
-  "nb_NO": "Norwegian Bokmål",
-};
-
 /**
  * Get Banner
  *
@@ -58,7 +52,7 @@ module.exports.getBanner = function getBanner(req, res) {
 module.exports.getLangList = function getLangList(req, res) {
   res.status(200).jsonp({
     "langList": {
-      "ltr": l.extend({}, availableLanguages, proxiedLangs),
+      "ltr": l.extend({}, availableLanguages),
       "rtl": {},
     },
     "verLang": 6,
@@ -99,11 +93,6 @@ module.exports.checkSpelling = function checkSpelling(req, res, next) {
   }
 
   const lang = req.query.slang;
-
-  if (proxiedLangs[lang]) {
-    var url = "http://svc.webspellchecker.net" + req.url;
-    return req.pipe(request(url)).pipe(res);
-  }
 
   const spellchecker = spellcheckers[lang];
 
